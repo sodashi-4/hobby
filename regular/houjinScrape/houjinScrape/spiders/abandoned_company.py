@@ -32,8 +32,10 @@ class ClosedCompanySpider(scrapy.Spider):
             print(corp_link)
             yield response.follow(corp_link,self.parse_item)
         next_page = response.xpath("//a[@rel='next']/@href").get()
-        next_page = 'https://houjin.jp' + next_page        
-        if next_page:
+        next_page = 'https://houjin.jp' + next_page     
+        target_date = re.findall(r'^.{10}',response.xpath("//span[contains(@class,'event-type-closed last-event')]/text()").get())[0]
+        target_date = datetime.datetime.strptime(target_date,"%Y/%m/%d")
+        if next_page and target_date >= datetime.datetime(2021,1,1,0,0,0):
             yield response.follow(next_page,self.get_corp)
     def parse_item(self, response):
         # with open(f"{self.name}.html", "w") as f:
