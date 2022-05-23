@@ -15,8 +15,11 @@ hobby/
   │  └ {project_name}/
   │      └ {script_name}.py
   │      └ README.md
-  └ utils/
-      └ {utils.py}
+  ├ utils/
+  |   └ {utils.py}
+  |
+  ├ inspection/
+  └ workspace/
 ```
 
 - adhoc
@@ -27,3 +30,5 @@ hobby/
   - 汎用性の高いコンポーネント・クラスを格納
 - inspection
   - 検証用
+- workspace
+  - git に上がらない個人のスペース
