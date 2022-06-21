@@ -64,3 +64,46 @@ class HoujinItem(scrapy.Item):
     scraped_date  = scrapy.Field(
         output_processor = TakeFirst()
     )
+
+# bqのスキーマ定義
+#     [{
+#     "name":"corp_number", 
+#     "type": "INTEGER",
+#     "mode": "NULLABLE"
+# },{
+#     "name": "corp_name", 
+#     "type": "STRING",
+#     "mode": "NULLABLE"
+# },{
+#     "name": "post_number",
+#     "type": "STRING",
+#     "mode": "NULLABLE"
+# },{
+#     "name": "address",
+#     "type": "STRING",
+#     "mode": "NULLABLE"
+# },{
+#     "name": "president_name",
+#     "type": "STRING",
+#     "mode": "NULLABLE"
+# },{
+#     "name": "url",
+#     "type": "STRING",
+#     "mode": "NULLABLE"
+# },{
+#     "name": "corp_created_at",
+#     "type": "DATE",
+#     "mode": "NULLABLE"
+# },{
+#     "name": "industry",
+#     "type": "STRING",
+#     "mode": "NULLABLE"
+# },{
+#     "name": "corp_num_created_at",
+#     "type": "DATE",
+#     "mode": "NULLABLE"
+# },{
+#     "name": "scraped_date",
+#     "type": "STRING",
+#     "mode": "NULLABLE"
+# }]

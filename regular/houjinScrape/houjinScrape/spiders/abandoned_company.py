@@ -1,15 +1,20 @@
+from gc import callbacks
 import scrapy
 from scrapy.loader import ItemLoader
 import re
 import os
+import requests
 import sys
+from lxml import html
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from items import HoujinItem
 import datetime
+
+URL = 'https://houjin.jp/'
+
 class ClosedCompanySpider(scrapy.Spider):
     name = 'abandoned_company'
-    allowed_domains = ['houjin.jp']
     start_urls = ['https://houjin.jp/events/closed']
 
     def start_requests(self):
@@ -25,16 +30,16 @@ class ClosedCompanySpider(scrapy.Spider):
             yield scrapy.Request(url,callback=self.get_corp)
 
 
-    def get_corp(self, response):
-        corp_links = response.xpath("//section[@class='main-section']/section/a/@href").getall()
-        for corp_link in corp_links:
-            corp_link = 'https://houjin.jp' + corp_link
-            print(corp_link)
-            yield response.follow(corp_link,self.parse_item)
-        next_page = response.xpath("//a[@rel='next']/@href").get()
-        next_page = 'https://houjin.jp' + next_page        
-        if next_page:
-            yield response.follow(next_page,self.get_corp)
+    def get_corp(self,response):
+        for i in range(20,2):
+            request_uri = f'https://houjin.jp/events?from=&page={i}&pref_id=&to=&type=closed'
+            res = requests.get(request_uri)
+            source = html.fromstring(res.text)
+            paths = source.xpath("//section[@class='c-corp-item']/a/@href")
+            for path in paths:
+                yield scrapy.Request(URL + path, callback=self.parse_item)
+
+
     def parse_item(self, response):
         # with open(f"{self.name}.html", "w") as f:
         #     f.write(response.text)
@@ -54,5 +59,3 @@ class ClosedCompanySpider(scrapy.Spider):
         loader.add_xpath('corp_num_created_at',"//table//tr[10]/td/p[1]/text()")
         loader.add_value('scraped_date', str(datetime.date.today()))
         yield loader.load_item()
-
-        
